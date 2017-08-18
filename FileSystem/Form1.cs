@@ -37,11 +37,6 @@ namespace FileSystem
             LoadGridViewFromPath("D:\\");
         }
 
-        private void listDirectory(TreeView treeView, string[] paths)
-        {
-            
-        }
-
         private static TreeNode CreateDirectoryNode(DirectoryInfo rootDirectroyInfo)
         {
             var directoryNode = new TreeNode(rootDirectroyInfo.Name);
