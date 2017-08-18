@@ -29,15 +29,17 @@ namespace FileSystem
 
         private void FormWindow_Load(object sender, EventArgs e)
         {
-            listDirectory(FolderTreeView, "D:\\");
+            FolderTreeView.Nodes.Clear();
+            foreach (var path in Directory.GetLogicalDrives())
+            {
+                FolderTreeView.Nodes.Add(path);
+            }
             LoadGridViewFromPath("D:\\");
         }
 
-        private void listDirectory(TreeView treeView, string path)
+        private void listDirectory(TreeView treeView, string[] paths)
         {
-            treeView.Nodes.Clear();
-            var rootDirectroyInfo = new DirectoryInfo(path);
-            treeView.Nodes.Add(CreateDirectoryNode(rootDirectroyInfo));
+            
         }
 
         private static TreeNode CreateDirectoryNode(DirectoryInfo rootDirectroyInfo)
@@ -50,10 +52,7 @@ namespace FileSystem
                     directoryNode.Nodes.Add(CreateDirectoryNode(folder));
                 }
             }
-            catch (Exception)
-            {
-                
-            }
+            catch (Exception) { }
             
             return directoryNode;
         }
@@ -129,6 +128,34 @@ namespace FileSystem
             {
                 historyIndex-=2;
                 LoadGridViewFromPath(history[historyIndex]);
+            }
+        }
+
+        private void NodeClicked(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            var path = e.Node.FullPath;
+            var directory = new DirectoryInfo(path);
+            DirectoryInfo[] folders;
+
+            try
+            {
+                folders = directory.GetDirectories();
+            }
+            catch (Exception)
+            {
+                folders = new DirectoryInfo[0];
+            }
+
+            if (e.Node.Nodes.Count == 0 || e.Node.Nodes.Count != folders.Length)
+            {
+                foreach (var folder in folders)
+                {
+                    e.Node.Nodes.Add(folder.Name);
+                }
+
+                e.Node.Expand();
+
+                LoadGridViewFromPath(path);
             }
         }
     }
