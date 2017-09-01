@@ -1,30 +1,23 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace FileSystem
 {
     public partial class FormWindow : Form
     {
-        string[] history;
-        int historyIndex;
-        int maxHistoryIndex;
+        private readonly string[] _history;
+        private int _historyIndex;
+        private int _maxHistoryIndex;
 
         public FormWindow()
         {
             InitializeComponent();
-            history = new string[20];
-            historyIndex = 0;
-            maxHistoryIndex = 0;
+            _history = new string[20];
+            _historyIndex = 0;
+            _maxHistoryIndex = 0;
         }
 
         private void FormWindow_Load(object sender, EventArgs e)
@@ -34,28 +27,18 @@ namespace FileSystem
             {
                 FolderTreeView.Nodes.Add(path);
             }
-            LoadGridViewFromPath("D:\\");
-        }
 
-        private static TreeNode CreateDirectoryNode(DirectoryInfo rootDirectroyInfo)
-        {
-            var directoryNode = new TreeNode(rootDirectroyInfo.Name);
-            try
+            var drives = Directory.GetLogicalDrives().Select(drive => new
             {
-                foreach (var folder in rootDirectroyInfo.GetDirectories())
-                {
-                    directoryNode.Nodes.Add(CreateDirectoryNode(folder));
-                }
-            }
-            catch (Exception) { }
-            
-            return directoryNode;
-        }
+                Name = drive,
+                DateModified = "N\\A",
+                DateCreated = "N\\A",
+                Size = "N\\A",
+                Type = "Disk Drive",
+                FullPath = drive
+            }).ToList();
 
-
-        private void LoadFilesGridView(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            LoadGridViewFromPath(e.Node.FullPath);
+            FilesGridView.DataSource = drives;
         }
 
         private void LoadGridViewFromPath(string path)
@@ -67,36 +50,35 @@ namespace FileSystem
             }
             var files = directory.GetFiles().Select(item => new
             {
-                Name = item.Name,
-                DateModified = item.LastWriteTime.ToString(),
-                DateCreated = item.CreationTime.ToString(),
+                item.Name,
+                DateModified = item.LastWriteTime.ToString(CultureInfo.InvariantCulture),
+                DateCreated = item.CreationTime.ToString(CultureInfo.InvariantCulture),
                 Size = (item.Length / 1024) + " KB",
                 Type = item.Extension,
                 FullPath = item.DirectoryName
             });
             var folders = directory.GetDirectories().Select(item => new
             {
-                Name = item.Name,
-                DateModified = item.LastWriteTime.ToString(),
-                DateCreated = item.CreationTime.ToString(),
+                item.Name,
+                DateModified = item.LastWriteTime.ToString(CultureInfo.InvariantCulture),
+                DateCreated = item.CreationTime.ToString(CultureInfo.InvariantCulture),
                 Size = "",
                 Type = "File Folder",
                 FullPath = item.FullName
-            }); ;
+            }); 
 
             var data = folders.Union(files).ToList();
 
             FilesGridView.DataSource = data;
             AddressTextBox.Text = path;
 
-            history[historyIndex++] = path;
-            maxHistoryIndex = (historyIndex > maxHistoryIndex) ? historyIndex : maxHistoryIndex;
+            _history[_historyIndex++] = path;
+            _maxHistoryIndex = (_historyIndex > _maxHistoryIndex) ? _historyIndex : _maxHistoryIndex;
         }
 
         private void OpenFolder(object sender, DataGridViewCellEventArgs e)
         {
             var row = FilesGridView.Rows[e.RowIndex];
-            var cell = row.Cells[e.ColumnIndex];
             var path = row.Cells["FullPath"].Value.ToString();
             LoadGridViewFromPath(path);
         }
@@ -111,18 +93,18 @@ namespace FileSystem
 
         private void ForwardButtonClicked(object sender, EventArgs e)
         {
-            if(historyIndex < maxHistoryIndex)
+            if(_historyIndex < _maxHistoryIndex)
             {
-                LoadGridViewFromPath(history[historyIndex]);
+                LoadGridViewFromPath(_history[_historyIndex]);
             }
         }
 
         private void BackwardButtonClicked(object sender, EventArgs e)
         {
-            if(historyIndex > 1)
+            if(_historyIndex > 1)
             {
-                historyIndex-=2;
-                LoadGridViewFromPath(history[historyIndex]);
+                _historyIndex-=2;
+                LoadGridViewFromPath(_history[_historyIndex]);
             }
         }
 
@@ -152,6 +134,11 @@ namespace FileSystem
 
                 LoadGridViewFromPath(path);
             }
+        }
+
+        private void NodeDoubleClicked(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            LoadGridViewFromPath(e.Node.FullPath);
         }
     }
 }

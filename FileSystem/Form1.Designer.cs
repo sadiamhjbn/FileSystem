@@ -45,6 +45,7 @@
             this.FolderTreeView.Size = new System.Drawing.Size(300, 511);
             this.FolderTreeView.TabIndex = 0;
             this.FolderTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.NodeClicked);
+            this.FolderTreeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.NodeDoubleClicked);
             // 
             // FilesGridView
             // 
