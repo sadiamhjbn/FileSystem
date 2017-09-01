@@ -12,6 +12,9 @@ namespace FileSystem
         private int _historyIndex;
         private int _maxHistoryIndex;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public FormWindow()
         {
             InitializeComponent();
@@ -20,6 +23,11 @@ namespace FileSystem
             _maxHistoryIndex = 0;
         }
 
+        /// <summary>
+        /// Initially loads GV and TV with drives    
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void FormWindow_Load(object sender, EventArgs e)
         {
             FolderTreeView.Nodes.Clear();
@@ -41,6 +49,10 @@ namespace FileSystem
             FilesGridView.DataSource = drives;
         }
 
+        /// <summary>
+        /// Loads folder to GV
+        /// </summary>
+        /// <param name="path"></param>
         private void LoadGridViewFromPath(string path)
         {
             var directory = new DirectoryInfo(path);
@@ -76,6 +88,11 @@ namespace FileSystem
             _maxHistoryIndex = (_historyIndex > _maxHistoryIndex) ? _historyIndex : _maxHistoryIndex;
         }
 
+        /// <summary>
+        /// Opens a folder on DG cell click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OpenFolder(object sender, DataGridViewCellEventArgs e)
         {
             var row = FilesGridView.Rows[e.RowIndex];
@@ -83,6 +100,11 @@ namespace FileSystem
             LoadGridViewFromPath(path);
         }
 
+        /// <summary>
+        /// Opens a folder from address bar
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void LoadFromAddressBar(object sender, KeyEventArgs e)
         {
             if(e.KeyCode == Keys.Enter)
@@ -91,6 +113,11 @@ namespace FileSystem
             }
         }
 
+        /// <summary>
+        /// Goes back to previous folder
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ForwardButtonClicked(object sender, EventArgs e)
         {
             if(_historyIndex < _maxHistoryIndex)
@@ -99,15 +126,23 @@ namespace FileSystem
             }
         }
 
+        /// <summary>
+        /// Opens previous folder
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BackwardButtonClicked(object sender, EventArgs e)
         {
-            if(_historyIndex > 1)
-            {
-                _historyIndex-=2;
-                LoadGridViewFromPath(_history[_historyIndex]);
-            }
+            if (_historyIndex <= 1) return;
+            _historyIndex-=2;
+            LoadGridViewFromPath(_history[_historyIndex]);
         }
 
+        /// <summary>
+        /// Opens corresponding folder on node click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void NodeClicked(object sender, TreeNodeMouseClickEventArgs e)
         {
             var path = e.Node.FullPath;
@@ -123,19 +158,22 @@ namespace FileSystem
                 folders = new DirectoryInfo[0];
             }
 
-            if (e.Node.Nodes.Count == 0 || e.Node.Nodes.Count != folders.Length)
+            if (e.Node.Nodes.Count != 0 && e.Node.Nodes.Count == folders.Length) return;
+            foreach (var folder in folders)
             {
-                foreach (var folder in folders)
-                {
-                    e.Node.Nodes.Add(folder.Name);
-                }
-
-                e.Node.Expand();
-
-                LoadGridViewFromPath(path);
+                e.Node.Nodes.Add(folder.Name);
             }
+
+            e.Node.Expand();
+
+            LoadGridViewFromPath(path);
         }
 
+        /// <summary>
+        /// Node double click handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void NodeDoubleClicked(object sender, TreeNodeMouseClickEventArgs e)
         {
             LoadGridViewFromPath(e.Node.FullPath);
