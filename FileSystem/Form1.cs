@@ -11,6 +11,7 @@ namespace FileSystem
         private readonly string[] _history;
         private int _historyIndex;
         private int _maxHistoryIndex;
+        private bool _showHiddenFiles;
 
         /// <inheritdoc />
         /// <summary>
@@ -37,6 +38,11 @@ namespace FileSystem
                 FolderTreeView.Nodes.Add(path);
             }
 
+            LoadDrives();
+        }
+
+        private void LoadDrives()
+        {
             var drives = Directory.GetLogicalDrives().Select(drive => new
             {
                 Name = drive,
@@ -57,13 +63,18 @@ namespace FileSystem
         /// <param name="path"></param>
         private void LoadGridViewFromPath(string path)
         {
+            if (string.IsNullOrEmpty(path))
+            {
+                LoadDrives();
+                return;
+            }
             var directory = new DirectoryInfo(path);
             if (!directory.Exists)
             {
                 return;
             }
             var files = directory.GetFiles()
-                .Where(item => !item.Attributes.HasFlag(FileAttributes.Hidden))
+                .Where(item => _showHiddenFiles || !item.Attributes.HasFlag(FileAttributes.Hidden))
                 .Select(item => new
                 {
                     item.Name,
@@ -304,6 +315,13 @@ namespace FileSystem
             }
 
             LoadGridViewFromPath(AddressTextBox.Text);
+        }
+
+        private void hideButton_Click(object sender, EventArgs e)
+        {
+            _showHiddenFiles = !_showHiddenFiles;
+
+            LoadFromAddressBar(sender, e);
         }
     }
 }

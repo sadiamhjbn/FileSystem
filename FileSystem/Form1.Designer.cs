@@ -33,14 +33,15 @@
             this.FolderTreeView = new System.Windows.Forms.TreeView();
             this.FilesGridView = new System.Windows.Forms.DataGridView();
             this.AddressTextBox = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.button5 = new System.Windows.Forms.Button();
+            this.hideButton = new System.Windows.Forms.Button();
             this.deleteButton = new System.Windows.Forms.Button();
             this.fileButton = new System.Windows.Forms.Button();
             this.folderButton = new System.Windows.Forms.Button();
             this.editButton = new System.Windows.Forms.Button();
             this.backwardButton = new System.Windows.Forms.Button();
             this.ForwardButton = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.button5 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.FilesGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -97,6 +98,44 @@
             this.AddressTextBox.Size = new System.Drawing.Size(557, 26);
             this.AddressTextBox.TabIndex = 2;
             this.AddressTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.LoadFromAddressBar);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Cambria", 14F);
+            this.label1.Location = new System.Drawing.Point(12, 65);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(110, 22);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Address Bar";
+            // 
+            // button5
+            // 
+            this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button5.Font = new System.Drawing.Font("Cambria", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button5.Location = new System.Drawing.Point(697, 65);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(75, 26);
+            this.button5.TabIndex = 10;
+            this.button5.Text = "Load";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.LoadFromAddressBar);
+            // 
+            // hideButton
+            // 
+            this.hideButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.hideButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.hideButton.FlatAppearance.BorderSize = 0;
+            this.hideButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.hideButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.hideButton.Image = global::FileSystem.Properties.Resources.hidden;
+            this.hideButton.Location = new System.Drawing.Point(392, 12);
+            this.hideButton.Name = "hideButton";
+            this.hideButton.Size = new System.Drawing.Size(50, 50);
+            this.hideButton.TabIndex = 11;
+            this.hideButton.UseVisualStyleBackColor = true;
+            this.hideButton.Click += new System.EventHandler(this.hideButton_Click);
             // 
             // deleteButton
             // 
@@ -186,34 +225,12 @@
             this.ForwardButton.UseVisualStyleBackColor = true;
             this.ForwardButton.Click += new System.EventHandler(this.ForwardButtonClicked);
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Cambria", 14F);
-            this.label1.Location = new System.Drawing.Point(12, 65);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(110, 22);
-            this.label1.TabIndex = 9;
-            this.label1.Text = "Address Bar";
-            // 
-            // button5
-            // 
-            this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button5.Font = new System.Drawing.Font("Cambria", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button5.Location = new System.Drawing.Point(697, 65);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 26);
-            this.button5.TabIndex = 10;
-            this.button5.Text = "Load";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.LoadFromAddressBar);
-            // 
             // FormWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.hideButton);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.deleteButton);
@@ -248,6 +265,7 @@
         private System.Windows.Forms.Button deleteButton;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button hideButton;
     }
 }
 

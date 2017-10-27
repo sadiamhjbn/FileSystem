@@ -84,6 +84,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="Resources\hidden.png" />
     <Content Include="Resources\remove.png" />
     <Content Include="Resources\folder.png" />
     <Content Include="Resources\file.png" />
